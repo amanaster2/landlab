@@ -15,29 +15,35 @@ class TruckPassErosion(Component):
     
     _input_var_names = (
         'topographic__elevation',
-        'supply__elevation',
+        'soil__depth',
+        'bedrock__elevation',
     )
     
     _output_var_names = (        
         'topographic__elevation',
-        'supply__elevation',
+        'soil__depth',
+        'bedrock__elevation',
     )
     
     _var_units = {
         'topographic__elevation': 'm',
-        'supply__elevation': 'm',
+        'soil__depth': 'm',
+        'bedrock__elevation': 'm',
     }
     
     _var_mapping = {
         'topographic__elevation': 'node',
-        'supply__elevation': 'node',
+        'soil__depth': 'node',
+        'bedrock__elevation': 'node',
     }
     
     _var_doc = {
         'topographic__elevation':
             'elevation of the ground surface relative to some datum; this field gets updated',
-        'supply__elevation':
-            'elevation of the "supply" surface relative to some datum; this field gets updated',
+        'soil__depth':
+            'elevation of the sediment surface relative to some datum; this field gets updated',
+        'bedrock__elevation':
+            'elevation of the bedrock surface relative to some datum; this field gets updated',
     }
     
     
@@ -70,9 +76,15 @@ class TruckPassErosion(Component):
         except:
             raise
             
-        # Get supply field
+        # Get sediment field
         try:
-            self.supply = grid.at_node['supply__elevation']
+            self.sediment = grid.at_node['soil__depth']
+        except:
+            raise
+            
+        # Get bedrock field
+        try:
+            self.bedrock = grid.at_node['bedrock__elevation']
         except:
             raise
             
@@ -100,21 +112,26 @@ class TruckPassErosion(Component):
             elif self.t_total >= self.morn and self.t_total <= self.eve:
                 self.t_b = rnd.expovariate(1/2.2)
                 
-                self.elev[tire_tracks[0]] -= 0.001
-                self.elev[tire_tracks[1]] -= 0.001
-                self.elev[tire_tracks[2]] += 0.0004
-                self.elev[tire_tracks[3]] += 0.0004
-                self.elev[tire_tracks[4]] += 0.0004
-                self.elev[tire_tracks[5]] += 0.0004
-                self.elev[tire_tracks[6]] += 0.0002
-                self.elev[tire_tracks[7]] += 0.0002
-                
-                self.supply[tire_tracks[2]] += 0.0004
-                self.supply[tire_tracks[3]] += 0.0004
-                self.supply[tire_tracks[4]] += 0.0004
-                self.supply[tire_tracks[5]] += 0.0004
-                self.supply[tire_tracks[6]] += 0.0002
-                self.supply[tire_tracks[7]] += 0.0002
+                if self.sediment >= 0:
+                    self.sediment[tire_tracks[0]] -= 0.001
+                    self.sediment[tire_tracks[1]] -= 0.001
+                    self.sediment[tire_tracks[2]] += 0.0004
+                    self.sediment[tire_tracks[3]] += 0.0004
+                    self.sediment[tire_tracks[4]] += 0.0004
+                    self.sediment[tire_tracks[5]] += 0.0004
+                    self.sediment[tire_tracks[6]] += 0.0002
+                    self.sediment[tire_tracks[7]] += 0.0002
+                else:
+                    self.bedrock[tire_tracks[0]] -= 0.001
+                    self.bedrock[tire_tracks[1]] -= 0.001
+                    self.sediment[tire_tracks[2]] += 0.0004
+                    self.sediment[tire_tracks[3]] += 0.0004
+                    self.sediment[tire_tracks[4]] += 0.0004
+                    self.sediment[tire_tracks[5]] += 0.0004
+                    self.sediment[tire_tracks[6]] += 0.0002
+                    self.sediment[tire_tracks[7]] += 0.0002
+                    
+                self.elev = self.sediment + self.bedrock
                 
                 self.time.append(self.t_total+self.day*step)
                 self.truck_pass.append(1)
