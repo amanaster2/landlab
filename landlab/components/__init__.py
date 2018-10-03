@@ -35,11 +35,8 @@ from .space import Space
 from .landslides import LandslideProbability
 from .transport_length_diffusion import TransportLengthHillslopeDiffuser
 from .normal_fault import NormalFault
-<<<<<<< HEAD
 from .road_erosion import TruckPassErosion
-=======
 from .lithology import Lithology, LithoLayers
->>>>>>> 96d40c66b4ec3ebe62dbdbe55ee94988daea1d1a
 
 COMPONENTS = [ChiFinder, LinearDiffuser,
               Flexure, FlowRouter, DepressionFinderAndRouter,
@@ -58,10 +55,6 @@ COMPONENTS = [ChiFinder, LinearDiffuser,
               FlowDirectorD8, FlowDirectorSteepest, FlowDirectorMFD,
               FlowDirectorDINF, FlowAccumulator, Space, ErosionDeposition,
               LandslideProbability, DepthDependentTaylorDiffuser,
-<<<<<<< HEAD
-              NormalFault, TruckPassErosion]
-=======
-              NormalFault, Lithology, LithoLayers]
->>>>>>> 96d40c66b4ec3ebe62dbdbe55ee94988daea1d1a
+              NormalFault, TruckPassErosion, Lithology, LithoLayers]
 
 __all__ = [cls.__name__ for cls in COMPONENTS]
