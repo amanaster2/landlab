@@ -21,6 +21,7 @@ from .sink_fill import SinkFiller
 from .steepness_index import SteepnessFinder
 from .stream_power import StreamPowerEroder, FastscapeEroder, StreamPowerSmoothThresholdEroder, SedDepEroder
 from .uniform_precip import PrecipitationDistribution
+from .spatial_precip import SpatialPrecipitationDistribution
 from .soil_moisture import SoilInfiltrationGreenAmpt
 from .plant_competition_ca import VegCA
 from .gflex import gFlex
@@ -34,7 +35,11 @@ from .space import Space
 from .landslides import LandslideProbability
 from .transport_length_diffusion import TransportLengthHillslopeDiffuser
 from .normal_fault import NormalFault
+<<<<<<< HEAD
 from .road_erosion import TruckPassErosion
+=======
+from .lithology import Lithology, LithoLayers
+>>>>>>> 96d40c66b4ec3ebe62dbdbe55ee94988daea1d1a
 
 COMPONENTS = [ChiFinder, LinearDiffuser,
               Flexure, FlowRouter, DepressionFinderAndRouter,
@@ -44,7 +49,7 @@ COMPONENTS = [ChiFinder, LinearDiffuser,
               Radiation, SinkFiller,
               StreamPowerEroder, StreamPowerSmoothThresholdEroder,
               FastscapeEroder, SedDepEroder,
-              PrecipitationDistribution,
+              PrecipitationDistribution, SpatialPrecipitationDistribution,
               SteepnessFinder, DetachmentLtdErosion, gFlex,
               SoilInfiltrationGreenAmpt, FireGenerator,
               SoilMoisture, Vegetation, VegCA, DrainageDensity,
@@ -53,6 +58,10 @@ COMPONENTS = [ChiFinder, LinearDiffuser,
               FlowDirectorD8, FlowDirectorSteepest, FlowDirectorMFD,
               FlowDirectorDINF, FlowAccumulator, Space, ErosionDeposition,
               LandslideProbability, DepthDependentTaylorDiffuser,
+<<<<<<< HEAD
               NormalFault, TruckPassErosion]
+=======
+              NormalFault, Lithology, LithoLayers]
+>>>>>>> 96d40c66b4ec3ebe62dbdbe55ee94988daea1d1a
 
 __all__ = [cls.__name__ for cls in COMPONENTS]
