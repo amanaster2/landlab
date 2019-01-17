@@ -18,6 +18,8 @@ import re
 import numpy as np
 import six
 
+from landlab.utils import add_halo
+
 _VALID_HEADER_KEYS = [
     "ncols",
     "nrows",
@@ -422,37 +424,24 @@ def read_esri_ascii(asc_file, grid=None, reshape=False, name=None, halo=0):
         if "nodata_value" in header.keys():
             nodata_value = header["nodata_value"]
         else:
-            header["nodata_value"] = -9999.
+            header["nodata_value"] = -9999.0
             nodata_value = header["nodata_value"]
         if data.size != (shape[0] - 2 * halo) * (shape[1] - 2 * halo):
             raise DataSizeError(shape[0] * shape[1], data.size)
-    spacing = (header["cellsize"], header["cellsize"])
-    origin = (
-        header["yllcorner"] - halo * header["cellsize"],
+    xy_spacing = (header["cellsize"], header["cellsize"])
+    xy_of_lower_left = (
         header["xllcorner"] - halo * header["cellsize"],
+        header["yllcorner"] - halo * header["cellsize"],
     )
 
     data = np.flipud(data)
 
-    # REMEMBER, shape contains the size with halo in place
-    # header contains the shape of the original data
-    # Add halo below
     if halo > 0:
-        helper_row = np.ones(shape[1]) * nodata_value
-        # for the first halo row(s), add num cols worth of nodata vals to data
-        for i in range(0, halo):
-            data = np.insert(data, 0, helper_row)
-        # then for header['nrows'] add halo number nodata vals, header['ncols']
-        # of data, then halo number of nodata vals
-        helper_row_ends = np.ones(halo) * nodata_value
-        for i in range(halo, header["nrows"] + halo):
-            # this adds at the beginning of the row
-            data = np.insert(data, i * shape[1], helper_row_ends)
-            # this adds at the end of the row
-            data = np.insert(data, (i + 1) * shape[1] - halo, helper_row_ends)
-        # for the last halo row(s), add num cols worth of nodata vals to data
-        for i in range(header["nrows"] + halo, shape[0]):
-            data = np.insert(data, data.size, helper_row)
+        data = add_halo(
+            data.reshape(header["nrows"], header["ncols"]),
+            halo=halo,
+            halo_value=nodata_value,
+        ).reshape((-1,))
 
     if not reshape:
         data = data.flatten()
@@ -467,7 +456,9 @@ def read_esri_ascii(asc_file, grid=None, reshape=False, name=None, halo=0):
             )
 
     if grid is None:
-        grid = RasterModelGrid(shape, spacing=spacing, origin=origin)
+        grid = RasterModelGrid(
+            shape, xy_spacing=xy_spacing, xy_of_lower_left=xy_of_lower_left
+        )
     if name:
         grid.add_field("node", name, data)
 
@@ -500,7 +491,7 @@ def write_esri_ascii(path, fields, names=None, clobber=False):
     >>> from landlab import RasterModelGrid
     >>> from landlab.io.esri_ascii import write_esri_ascii
 
-    >>> grid = RasterModelGrid((4, 5), spacing=(2., 2.))
+    >>> grid = RasterModelGrid((4, 5), xy_spacing=(2., 2.))
     >>> _ = grid.add_field('node', 'air__temperature', np.arange(20.))
     >>> with cdtemp() as _:
     ...     files = write_esri_ascii('test.asc', grid)

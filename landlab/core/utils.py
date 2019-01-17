@@ -169,6 +169,13 @@ def as_id_array(array):
     array([0, 1, 2, 3, 4])
     >>> y.dtype == np.int
     True
+
+    >>> x = np.arange(5, dtype=np.intp)
+    >>> y = np.where(x < 3)[0]
+    >>> y.dtype == np.intp
+    True
+    >>> as_id_array(y).dtype == np.int
+    True
     """
     try:
         if array.dtype == np.int:
@@ -177,24 +184,6 @@ def as_id_array(array):
             return array.astype(np.int)
     except AttributeError:
         return np.asarray(array, dtype=np.int)
-
-
-if np.dtype(np.intp) == np.int:
-
-    def _as_id_array(array):
-        if array.dtype == np.intp or array.dtype == np.int:
-            return array.view(np.int)
-        else:
-            return array.astype(np.int)
-
-
-else:
-
-    def _as_id_array(array):
-        if array.dtype == np.int:
-            return array.view(np.int)
-        else:
-            return array.astype(np.int)
 
 
 def make_optional_arg_into_id_array(number_of_elements, *args):
@@ -246,7 +235,7 @@ def make_optional_arg_into_id_array(number_of_elements, *args):
     return ids
 
 
-def get_functions_from_module(mod, pattern=None):
+def get_functions_from_module(mod, pattern=None, exclude=None):
     """Get all the function in a module.
 
     Parameters
@@ -255,6 +244,10 @@ def get_functions_from_module(mod, pattern=None):
         An instance of a module.
     pattern : str, optional
         Only get functions whose name match a regular expression.
+    exclude : str, optional
+        Only get functions whose name exclude the regular expression.
+
+    *Note* if both pattern and exclude are provided both conditions must be met.
 
     Returns
     -------
@@ -267,8 +260,9 @@ def get_functions_from_module(mod, pattern=None):
 
     funcs = {}
     for name, func in inspect.getmembers(mod, inspect.isroutine):
-        if pattern is None or re.match(pattern, name):
-            funcs[name] = func
+        if pattern is None or re.search(pattern, name):
+            if exclude is None or (re.search(exclude, name) is None):
+                funcs[name] = func
     return funcs
 
 
@@ -286,7 +280,7 @@ def add_functions_to_class(cls, funcs):
         setattr(cls, name, func)
 
 
-def add_module_functions_to_class(cls, module, pattern=None):
+def add_module_functions_to_class(cls, module, pattern=None, exclude=None):
     """Add functions from a module to a class as methods.
 
     Parameters
@@ -297,6 +291,10 @@ def add_module_functions_to_class(cls, module, pattern=None):
         An instance of a module.
     pattern : str, optional
         Only get functions whose name match a regular expression.
+    exclude : str, optional
+        Only get functions whose name exclude the regular expression.
+
+    *Note* if both pattern and exclude are provided both conditions must be met.
     """
     import inspect
     import imp
@@ -309,7 +307,7 @@ def add_module_functions_to_class(cls, module, pattern=None):
 
     mod = imp.load_module(module, *imp.find_module(module, [path]))
 
-    funcs = get_functions_from_module(mod, pattern=pattern)
+    funcs = get_functions_from_module(mod, pattern=pattern, exclude=exclude)
     strip_grid_from_method_docstring(funcs)
     add_functions_to_class(cls, funcs)
 
@@ -605,7 +603,7 @@ def get_categories_from_grid_methods(grid_type):
     Parameters
     ----------
     grid_type : {'ModelGrid', 'RasterModelGrid', 'HexModelGrid',
-                 'RadialModelGrid', 'VoronoiDelaunayGrid'}
+                 'RadialModelGrid', 'VoronoiDelaunayGrid', 'NetworkModelGrid'}
         String of raster to inspect.
 
     Returns
@@ -628,6 +626,7 @@ def get_categories_from_grid_methods(grid_type):
         HexModelGrid,
         RadialModelGrid,
         VoronoiDelaunayGrid,
+        NetworkModelGrid,
     )
     from copy import copy
 
@@ -637,6 +636,7 @@ def get_categories_from_grid_methods(grid_type):
         "HexModelGrid": HexModelGrid,
         "RadialModelGrid": RadialModelGrid,
         "VoronoiDelaunayGrid": VoronoiDelaunayGrid,
+        "NetworkModelGrid": NetworkModelGrid,
     }
     grid_dict = {}
     cat_dict = {}
