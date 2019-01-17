@@ -302,7 +302,7 @@ class KinwaveImplicitOverlandFlowADM(Component):
             # ordering
             self.flow_accum.run_one_step()
             self.nodes_ordered = self.grid.at_node['flow__upstream_node_order']
-            self.flow_lnks = self.grid.at_node['flow__link_to_receiver_node']
+            self.flow_lnks = self.grid.at_node['flow__links_to_receiver_nodes']
 
             # (Re)calculate, for each node, sum of sqrt(gradient) x width
             self.grad_width_sum[:] = 0.0
