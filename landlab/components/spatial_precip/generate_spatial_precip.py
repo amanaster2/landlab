@@ -1,3 +1,8 @@
+<<<<<<< HEAD
+=======
+
+
+>>>>>>> 8063e9eaebe0f03c916c49373b8d6c84254060fc
 import numpy as np
 import os
 import inspect
@@ -1617,6 +1622,7 @@ if __name__ == "__main__":
     #     print()
     #     show()
 
+
 import numpy as np
 from scipy.stats import fisk, genextreme
 from six.moves import range
@@ -1749,7 +1755,11 @@ class SpatialPrecipitationDistribution(Component):
 
     >>> import numpy as np
     >>> from landlab import RasterModelGrid, VoronoiDelaunayGrid
+<<<<<<< HEAD
     >>> mg = RasterModelGrid((10, 10), xy_spacing=1000.)
+=======
+    >>> mg = RasterModelGrid((10, 10), 1000.)
+>>>>>>> 8063e9eaebe0f03c916c49373b8d6c84254060fc
     >>> rain = SpatialPrecipitationDistribution(mg)
 
     Calling yield_storms will produce storm-interstorm duration (hr) pairs
@@ -3022,7 +3032,11 @@ class SpatialPrecipitationDistribution(Component):
 
         Examples
         --------
+<<<<<<< HEAD
         >>> mg = RasterModelGrid((10, 10), xy_spacing=500.)
+=======
+        >>> mg = RasterModelGrid((10, 10), 500.)
+>>>>>>> 8063e9eaebe0f03c916c49373b8d6c84254060fc
         >>> z = mg.add_zeros('node', 'topographic__elevation')
         >>> rain = SpatialPrecipitationDistribution(mg)
         >>> mytotals = []
@@ -3298,7 +3312,11 @@ if __name__ == "__main__":
     nx = 17
     ny = 8
     dx = 1000.
+<<<<<<< HEAD
     mg = RasterModelGrid((nx, ny), xy_spacing=dx)
+=======
+    mg = RasterModelGrid((nx, ny), dx)
+>>>>>>> 8063e9eaebe0f03c916c49373b8d6c84254060fc
     # closed_nodes = np.zeros((nx, ny), dtype=bool)
     # closed_nodes[:, :10] = True
     # closed_nodes[:, 30:] = True
@@ -3339,7 +3357,11 @@ if __name__ == "__main__":
     print("Storms simulated:")
     print(count)
 
+<<<<<<< HEAD
     # mg = RasterModelGrid((100, 100), xy_spacing=500.)
+=======
+    # mg = RasterModelGrid((100, 100), 500.)
+>>>>>>> 8063e9eaebe0f03c916c49373b8d6c84254060fc
     # # mg.status_at_node[closed_nodes.flatten()] = CLOSED_BOUNDARY
     # # imshow_grid_at_node(mg, mg.status_at_node)
     # # show()
@@ -3386,3 +3408,7 @@ if __name__ == "__main__":
     #     print('Actual rainfall last season')
     #     print()
     #     show()
+<<<<<<< HEAD
+=======
+
+>>>>>>> 8063e9eaebe0f03c916c49373b8d6c84254060fc
