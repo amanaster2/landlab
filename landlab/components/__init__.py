@@ -1,7 +1,8 @@
 from .chi_index import ChiFinder
 from .diffusion import LinearDiffuser
 from .fire_generator import FireGenerator
-from .detachment_ltd_erosion import DetachmentLtdErosion, DepthSlopeProductErosion
+from .detachment_ltd_erosion import DetachmentLtdErosion
+from .detachment_ltd_erosion import DepthSlopeProductErosion
 from .flexure import Flexure
 from .flow_routing import FlowRouter, DepressionFinderAndRouter
 from .nonlinear_diffusion import PerronNLDiffuse
@@ -18,7 +19,8 @@ from .pet import PotentialEvapotranspiration
 from .radiation import Radiation
 from .soil_moisture import SoilMoisture
 from .vegetation_dynamics import Vegetation
-from .sink_fill import SinkFiller
+from .lake_fill import LakeMapperBarnes
+from .sink_fill import SinkFiller, SinkFillerBarnes
 from .steepness_index import SteepnessFinder
 from .stream_power import (
     StreamPowerEroder,
@@ -79,6 +81,8 @@ COMPONENTS = [
     PotentialityFlowRouter,
     Radiation,
     SinkFiller,
+    SinkFillerBarnes,
+    LakeMapperBarnes,
     StreamPowerEroder,
     StreamPowerSmoothThresholdEroder,
     FastscapeEroder,
