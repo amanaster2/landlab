@@ -725,7 +725,7 @@ class FlowAccumulator(Component):
                 )
         else:
             node_cell_area = self._grid.cell_area_at_node.copy()
-            node_cell_area[self._grid.closed_boundary_nodes] = 0.
+            node_cell_area[self._grid.closed_boundary_nodes] = 0.0
 
         self.node_cell_area = node_cell_area
 
@@ -1136,7 +1136,7 @@ class FlowAccumulator(Component):
                 self.depression_finder.map_depressions()
 
                 # if FlowDirectorSteepest is used, update the link directions
-                if self.flow_director._name is "FlowDirectorSteepest":
+                if self.flow_director._name == "FlowDirectorSteepest":
                     self.flow_director._determine_link_directions()
 
             # step 3. Stack, D, delta construction
