@@ -9,7 +9,7 @@ Date: 06/08/2018
 from landlab import Component
 from landlab.components import LinearDiffuser
 import random as rnd
-
+import numpy as np
 
 class TruckPassErosion(Component):
     
@@ -80,8 +80,8 @@ class TruckPassErosion(Component):
                
         # Instantiate linear diffuser
         self.lin_diffuse1 = LinearDiffuser(grid, linear_diffusivity=self.diffusivity)
-        self.lin_diffuse2 = LinearDiffuser(grid, linear_diffusivity=self.diffusivity, \
-                                           values_to_diffuse = 'soil__depth')
+        #self.lin_diffuse2 = LinearDiffuser(grid, linear_diffusivity=self.diffusivity, \
+        #                                   values_to_diffuse = 'soil__depth')
         
         #initialize truck pass and time arrays
         self.truck_pass = []
@@ -93,16 +93,16 @@ class TruckPassErosion(Component):
         self.t_pass = current_time
         self.t_total = current_time
         self.sed[tire_tracks] = 0      
-        
+
         while self.t_total <= self.day:
             if self.t_total < self.morn:
-                self.T_B_morning = rnd.expovariate(1/self.morn)
+                self.T_B_morning = np.random.exponential(self.morn)
                 self.time.append(self.t_total + (self.day*step))
                 self.truck_pass.append(0)
                 self.t_recover += self.T_B_morning
             
             elif self.t_total >= self.morn and self.t_total <= self.eve:
-                self.t_b = rnd.expovariate(1/2.2)
+                self.t_b = np.random.exponential(2.2)
                 
                 self.sed[tire_tracks[0]] -= 0.001
                 self.sed[tire_tracks[1]] -= 0.001
@@ -119,13 +119,13 @@ class TruckPassErosion(Component):
                 self.t_pass += self.t_b
                   
             elif self.t_total > self.eve:
-                self.T_B_night = rnd.expovariate(1/(self.day - self.eve))
+                self.T_B_night = np.random.exponential((self.day - self.eve))
                 
                 self.time.append(self.t_total + self.day*step)
                 self.truck_pass.append(0)
                 self.t_recover += self.T_B_night                
                 self.lin_diffuse1.run_one_step(self.T_B_night)
-                self.lin_diffuse2.run_one_step(self.T_B_night)  
+                #self.lin_diffuse2.run_one_step(self.T_B_night)  
                 
             self.t_total = self.t_pass + self.t_recover
 			
