@@ -4,6 +4,7 @@ cimport cython
 cimport numpy as np
 
 from scipy.optimize import newton
+
 # suspect that the function _brentq is in c and thus this is the most effective
 # method for using the brentq method in cython.
 from scipy.optimize._zeros import _brentq as brentq
@@ -357,7 +358,7 @@ def erode_fn(DTYPE_FLOAT_t x,
     """
     cdef double f
 
-    f = x - 1.0 + (alpha * (x ** n)) - beta
+    f = x - 1.0 + (alpha * pow(x, n)) - beta
 
     return f
 
