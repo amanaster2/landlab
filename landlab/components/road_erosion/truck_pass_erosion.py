@@ -93,16 +93,18 @@ class TruckPassErosion(Component):
         self.t_pass = current_time
         self.t_total = current_time
         self.sed[tire_tracks] = 0      
+        
+        rng = np.random.RandomState(2024)
 
         while self.t_total <= self.day:
             if self.t_total < self.morn:
-                self.T_B_morning = np.random.exponential(self.morn)
+                self.T_B_morning = rng.random.exponential(self.morn)
                 self.time.append(self.t_total + (self.day*step))
                 self.truck_pass.append(0)
                 self.t_recover += self.T_B_morning
             
             elif self.t_total >= self.morn and self.t_total <= self.eve:
-                self.t_b = np.random.exponential(2.2)
+                self.t_b = rng.random.exponential(2.2)
                 
                 self.sed[tire_tracks[0]] -= 0.001
                 self.sed[tire_tracks[1]] -= 0.001
@@ -119,7 +121,7 @@ class TruckPassErosion(Component):
                 self.t_pass += self.t_b
                   
             elif self.t_total > self.eve:
-                self.T_B_night = np.random.exponential((self.day - self.eve))
+                self.T_B_night = rng.random.exponential((self.day - self.eve))
                 
                 self.time.append(self.t_total + self.day*step)
                 self.truck_pass.append(0)
